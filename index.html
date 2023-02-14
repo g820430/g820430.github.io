@@ -12,7 +12,7 @@
         box-sizing: border-box;
         list-style: none;
       }
-      body{
+      body {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -32,7 +32,7 @@
         margin: 1rem;
       }
 
-      textarea{
+      textarea {
         font-size: 22px;
       }
 
@@ -63,6 +63,7 @@
     <div class="weightInput hidden">
       <span>請輸入面向占比</span>
       <textarea
+        class="clear"
         name="weight"
         id="weight"
         cols="30"
@@ -75,12 +76,13 @@
     <div class="scoreInput">
       <span>請輸入分數</span>
       <textarea
+        class="clear"
         name="score"
         id="score"
         cols="30"
         rows="5"
         placeholder="可用空格、逗號或換行隔開數字
-(配分制請一照面向順序輸入)"
+(配分制請依照面向順序輸入)"
         autofocus
       ></textarea>
     </div>
@@ -97,8 +99,18 @@
       method.addEventListener("change", () => {
         if (method.value == 1) {
           weightClass.classList.add("hidden");
+          document.querySelector("#highLowResult").innerHTML = "";
+          document.querySelector("#stdResult").innerHTML = "";
+          document.querySelector("#avgResult").innerHTML = "";
+          document.querySelector("#weight").value = "";
+          document.querySelector("#score").value = "";
         } else {
           weightClass.classList.remove("hidden");
+          document.querySelector("#highLowResult").innerHTML = "";
+          document.querySelector("#stdResult").innerHTML = "";
+          document.querySelector("#avgResult").innerHTML = "";
+          document.querySelector("#weight").value = "";
+          document.querySelector("#score").value = "";
         }
       });
 
