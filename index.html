@@ -117,125 +117,124 @@
       excute.addEventListener("click", () => {
         let scores = document.querySelector("#score").value;
         let weight = document.querySelector("#weight").value;
-        // 尾端空格判斷
+        // 尾端去空格判斷
         if (scores[scores.length - 1] === " ") {
-          alert("分數有多打空格");
-        } else if (weight[weight.length - 1] === " ") {
-          alert("面向有多打空格");
-        } else {
-          let unsortScore = scores.split(/[,\s\n]+/).map(Number);
-          scores = scores
-            .split(/[,\s\n]+/)
-            .map(Number)
-            .sort();
+          scores = scores.substring(0, scores.length - 1);
+        }
+        if (weight[weight.length - 1] === " ") {
+          weight = weight.substring(0, weight.length - 1);
+        }
+        let unsortScore = scores.split(/[,\s\n]+/).map(Number);
+        scores = scores
+          .split(/[,\s\n]+/)
+          .map(Number)
+          .sort();
 
-          weight = weight.split(/[,\s\n]+/).map(Number);
+        weight = weight.split(/[,\s\n]+/).map(Number);
 
-          function minMax(array) {
-            return array[array.length - 1] - array[0];
-          }
+        function minMax(array) {
+          return array[array.length - 1] - array[0];
+        }
 
-          function std(array) {
-            let Avg = array.reduce((x, y) => x + y) / array.length;
-            let squaredDeviations = array.map((x) => (x - Avg) ** 2);
-            let standardDeviation = Math.sqrt(
-              squaredDeviations.reduce((x, y) => x + y) /
-                squaredDeviations.length
-            );
-            return standardDeviation;
-          }
+        function std(array) {
+          let Avg = array.reduce((x, y) => x + y) / array.length;
+          let squaredDeviations = array.map((x) => (x - Avg) ** 2);
+          let standardDeviation = Math.sqrt(
+            squaredDeviations.reduce((x, y) => x + y) / squaredDeviations.length
+          );
+          return standardDeviation;
+        }
 
-          function compareWeight(arr1, arr2) {
-            for (let i = 0; i < arr1.length; i++) {
-              if (arr1[i] > arr2[i]) {
-                return true;
-              }
+        function compareWeight(arr1, arr2) {
+          for (let i = 0; i < arr1.length; i++) {
+            if (arr1[i] > arr2[i]) {
+              return true;
             }
           }
-          function compareScore(arr) {
-            for (let i = 0; i < arr.length; i++) {
-              if (arr[i] > 100 || arr[i] < 0) {
-                return true;
-              }
+        }
+        function compareScore(arr) {
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i] > 100 || arr[i] < 0) {
+              return true;
             }
           }
+        }
 
-          // 百分制
-          if (method.value == 1) {
-            if (compareScore(unsortScore)) {
-              alert("分數需介於0~100之間");
-            } else {
-              // 高低差
-              let gap = minMax(scores);
-              document.querySelector("#highLowResult").innerHTML =
-                "高低差為：" + Math.abs(gap.toFixed(2));
-              // 標準差
-              let stdResult = std(scores);
-              document.querySelector("#stdResult").innerHTML =
-                "標準差為：" + stdResult.toFixed(2);
-              // 離均差
-              let avgResult = document.querySelector("#avgResult");
-              while (avgResult.firstChild) {
-                avgResult.removeChild(avgResult.firstChild);
-              }
-              for (let i = 0; i < scores.length; i++) {
-                let avg = scores.reduce((x, y) => x + y) / scores.length;
-                let temp = unsortScore[i] - avg;
-                let createD = document.createElement("div");
-                createD.innerHTML =
-                  unsortScore[i] + " 的離均差為：" + Math.abs(temp.toFixed(2));
-                avgResult.appendChild(createD);
-              }
+        // 百分制
+        if (method.value == 1) {
+          if (compareScore(unsortScore)) {
+            alert("分數需介於0~100之間");
+          } else {
+            // 高低差
+            let gap = minMax(scores);
+            document.querySelector("#highLowResult").innerHTML =
+              "高低差為：" + Math.abs(gap.toFixed(2));
+            // 標準差
+            let stdResult = std(scores);
+            document.querySelector("#stdResult").innerHTML =
+              "標準差為：" + stdResult.toFixed(2);
+            // 離均差
+            let avgResult = document.querySelector("#avgResult");
+            while (avgResult.firstChild) {
+              avgResult.removeChild(avgResult.firstChild);
+            }
+            for (let i = 0; i < scores.length; i++) {
+              let avg = scores.reduce((x, y) => x + y) / scores.length;
+              let temp = unsortScore[i] - avg;
+              let createD = document.createElement("div");
+              createD.innerHTML =
+                unsortScore[i] + " 的離均差為：" + Math.abs(temp.toFixed(2));
+              avgResult.appendChild(createD);
             }
           }
-          // 配分制
-          if (method.value == 2) {
-            // 檢查分數
-            let weightSum = weight.reduce((x, y) => x + y);
-            let unsortScoreSum = weight.reduce((x, y) => x + y);
-            if (weightSum !== 100) {
-              alert("面向總和須為100");
-            } else if (weight.length !== unsortScore.length) {
-              alert("面向數量與分數數量需相同(或是多打了空白鍵)");
-            } else if (unsortScoreSum !== 100) {
-              alert("分數總和須為100");
-            } else if (compareWeight(unsortScore, weight)) {
-              alert("面向分數不得大於面向權重");
-            } else {
-              // 轉換百分制
-              let percentScore = [];
-              for (let i = 0; i < weight.length; i++) {
-                let temp = (unsortScore[i] / weight[i]) * 100;
-                percentScore.push(temp);
-              }
-              let percentScoreSort = percentScore.slice().sort();
+        }
+        // 配分制
+        if (method.value == 2) {
+          // 檢查分數
+          let weightSum = weight.reduce((x, y) => x + y);
+          if (weightSum !== 100) {
+            alert("面向總和須為100");
+          } else if (weight.length !== unsortScore.length) {
+            alert("面向數量與分數數量需相同");
+          } else if (
+            compareWeight(unsortScore, weight) ||
+            compareScore(unsortScore)
+          ) {
+            alert("面向分數需介於0-100且不得大於面向權重");
+          } else {
+            // 轉換百分制
+            let percentScore = [];
+            for (let i = 0; i < weight.length; i++) {
+              let temp = (unsortScore[i] / weight[i]) * 100;
+              percentScore.push(temp);
+            }
+            let percentScoreSort = percentScore.slice().sort();
 
-              // 高低差
-              let gap = minMax(percentScoreSort);
-              document.querySelector("#highLowResult").innerHTML =
-                "高低差為：" + Math.abs(gap.toFixed(2));
+            // 高低差
+            let gap = minMax(percentScoreSort);
+            document.querySelector("#highLowResult").innerHTML =
+              "高低差為：" + Math.abs(gap.toFixed(2));
 
-              // 標準差
-              let stdResult = std(percentScoreSort);
-              document.querySelector("#stdResult").innerHTML =
-                "標準差為：" + stdResult.toFixed(2);
+            // 標準差
+            let stdResult = std(percentScoreSort);
+            document.querySelector("#stdResult").innerHTML =
+              "標準差為：" + stdResult.toFixed(2);
 
-              // 離均差
-              let avgResult = document.querySelector("#avgResult");
-              let avg =
-                percentScore.reduce((x, y) => x + y) / percentScore.length;
+            // 離均差
+            let avgResult = document.querySelector("#avgResult");
+            let avg =
+              percentScore.reduce((x, y) => x + y) / percentScore.length;
 
-              while (avgResult.firstChild) {
-                avgResult.removeChild(avgResult.firstChild);
-              }
+            while (avgResult.firstChild) {
+              avgResult.removeChild(avgResult.firstChild);
+            }
 
-              for (let i = 0; i < percentScore.length; i++) {
-                let temp = percentScore[i] - avg;
-                let createD = document.createElement("div");
-                createD.innerHTML =
-                  unsortScore[i] + " 的離均差為：" + Math.abs(temp.toFixed(2));
-                avgResult.appendChild(createD);
-              }
+            for (let i = 0; i < percentScore.length; i++) {
+              let temp = percentScore[i] - avg;
+              let createD = document.createElement("div");
+              createD.innerHTML =
+                unsortScore[i] + " 的離均差為：" + Math.abs(temp.toFixed(2));
+              avgResult.appendChild(createD);
             }
           }
         }
