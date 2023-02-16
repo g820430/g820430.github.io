@@ -115,28 +115,22 @@
       });
 
       excute.addEventListener("click", () => {
-        let scores = document.querySelector("#score").value;
-        let weight = document.querySelector("#weight").value;
-        // 首尾端去空格判斷
-        if (scores[scores.length - 1] === " ") {
-          scores = scores.substring(0, scores.length - 1);
-        }
-        if (scores[0] === " ") {
-          scores = scores.substring(1, scores.length);
-        }
-        if (weight[weight.length - 1] === " ") {
-          weight = weight.substring(0, weight.length - 1);
-        }
-        if (weight[0] === " ") {
-          weight = weight.substring(1, weight.length);
-        }
-        let unsortScore = scores.split(/[,\s\n]+/).map(Number);
+        let scores = document.querySelector("#score").value.trim();
+        let weight = document.querySelector("#weight").value.trim();
+        let unsortScore = scores
+          .split(/[,\s\n]+/)
+          .filter(Boolean)
+          .map(Number);
         scores = scores
           .split(/[,\s\n]+/)
+          .filter(Boolean)
           .map(Number)
           .sort();
 
-        weight = weight.split(/[,\s\n]+/).map(Number);
+        weight = weight
+          .split(/[,\s\n]+/)
+          .filter(Boolean)
+          .map(Number);
 
         function minMax(array) {
           return array[array.length - 1] - array[0];
@@ -160,7 +154,7 @@
         }
         function compareScore(arr) {
           for (let i = 0; i < arr.length; i++) {
-            if (arr[i] > 100 || arr[i] < 0) {
+            if (arr[i] > 100 || arr[i] < 0 || Number.isNaN(arr[i])) {
               return true;
             }
           }
@@ -169,7 +163,7 @@
         // 百分制
         if (method.value == 1) {
           if (compareScore(unsortScore)) {
-            alert("分數需介於0~100之間");
+            alert("分數請輸入於0~100之間");
           } else {
             // 高低差
             let gap = minMax(scores);
@@ -206,7 +200,7 @@
             compareWeight(unsortScore, weight) ||
             compareScore(unsortScore)
           ) {
-            alert("面向分數需介於0-100且不得大於面向權重");
+            alert("面向分數需輸入於0-100且不得大於面向權重");
           } else {
             // 轉換百分制
             let percentScore = [];
