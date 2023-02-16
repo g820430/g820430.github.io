@@ -118,9 +118,9 @@
         let scores = document.querySelector("#score").value;
         let weight = document.querySelector("#weight").value;
         // 尾端空格判斷
-        if (scores.substring(scores.length - 1, scores.length) === " ") {
+        if (scores[scores.length - 1] === " ") {
           alert("分數有多打空格");
-        } else if (weight.substring(weight.length - 1, weight.length) === " ") {
+        } else if (weight[weight.length - 1] === " ") {
           alert("面向有多打空格");
         } else {
           let unsortScore = scores.split(/[,\s\n]+/).map(Number);
