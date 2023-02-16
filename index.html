@@ -117,12 +117,18 @@
       excute.addEventListener("click", () => {
         let scores = document.querySelector("#score").value;
         let weight = document.querySelector("#weight").value;
-        // 尾端去空格判斷
+        // 首尾端去空格判斷
         if (scores[scores.length - 1] === " ") {
           scores = scores.substring(0, scores.length - 1);
         }
+        if (scores[0] === " ") {
+          scores = scores.substring(1, scores.length);
+        }
         if (weight[weight.length - 1] === " ") {
           weight = weight.substring(0, weight.length - 1);
+        }
+        if (weight[0] === " ") {
+          weight = weight.substring(1, weight.length);
         }
         let unsortScore = scores.split(/[,\s\n]+/).map(Number);
         scores = scores
