@@ -167,18 +167,16 @@
               "標準差為：" + stdResult.toFixed(2);
             // 離均差
             let avgResult = document.querySelector("#avgResult");
-            if (avgResult.firstChild) {
-              while (avgResult.firstChild) {
-                avgResult.removeChild(avgResult.firstChild);
-              }
+            while (avgResult.firstChild) {
+              avgResult.removeChild(avgResult.firstChild);
             }
             for (let i = 0; i < scores.length; i++) {
-              let avgNum = scores.reduce((x, y) => x + y) / scores.length;
-              let temp = unsortScore[i] - avgNum;
-              let createP = document.createElement("div");
-              createP.innerHTML =
+              let avg = scores.reduce((x, y) => x + y) / scores.length;
+              let temp = unsortScore[i] - avg;
+              let createD = document.createElement("div");
+              createD.innerHTML =
                 unsortScore[i] + " 的離均差為：" + Math.abs(temp.toFixed(2));
-              avgResult.appendChild(createP);
+              avgResult.appendChild(createD);
             }
           }
         }
@@ -187,11 +185,11 @@
           // 檢查分數
           let weightSum = weight.reduce((x, y) => x + y);
           let unsortScoreSum = weight.reduce((x, y) => x + y);
-          if (weightSum > 100 || weightSum !== 100) {
+          if (weightSum !== 100) {
             alert("面向總和須為100");
           } else if (weight.length !== unsortScore.length) {
-            alert("面向數量與分數數量需相同");
-          } else if (unsortScoreSum > 100 || unsortScoreSum !== 100) {
+            alert("面向數量與分數數量需相同(或是多打了空白鍵)");
+          } else if (unsortScoreSum !== 100) {
             alert("分數總和須為100");
           } else if (compareWeight(unsortScore, weight)) {
             alert("面向分數不得大於面向權重");
@@ -216,19 +214,19 @@
 
             // 離均差
             let avgResult = document.querySelector("#avgResult");
-            let unsortAvg =
+            let avg =
               percentScore.reduce((x, y) => x + y) / percentScore.length;
-            if (avgResult.firstChild) {
-              while (avgResult.firstChild) {
-                avgResult.removeChild(avgResult.firstChild);
-              }
+
+            while (avgResult.firstChild) {
+              avgResult.removeChild(avgResult.firstChild);
             }
+
             for (let i = 0; i < percentScore.length; i++) {
-              let temp = percentScore[i] - unsortAvg;
-              let createP = document.createElement("div");
-              createP.innerHTML =
+              let temp = percentScore[i] - avg;
+              let createD = document.createElement("div");
+              createD.innerHTML =
                 unsortScore[i] + " 的離均差為：" + Math.abs(temp.toFixed(2));
-              avgResult.appendChild(createP);
+              avgResult.appendChild(createD);
             }
           }
         }
