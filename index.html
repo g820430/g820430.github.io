@@ -86,6 +86,7 @@
         autofocus
       ></textarea>
     </div>
+    <div id="socreNum"></div>
     <div id="highLowResult"></div>
     <div id="stdResult"></div>
     <div id="avgResult"></div>
@@ -99,6 +100,7 @@
       method.addEventListener("change", () => {
         if (method.value == 1) {
           weightClass.classList.add("hidden");
+          document.querySelector("#socreNum").innerHTML = "";
           document.querySelector("#highLowResult").innerHTML = "";
           document.querySelector("#stdResult").innerHTML = "";
           document.querySelector("#avgResult").innerHTML = "";
@@ -106,6 +108,7 @@
           document.querySelector("#score").value = "";
         } else {
           weightClass.classList.remove("hidden");
+          document.querySelector("#socreNum").innerHTML = "";
           document.querySelector("#highLowResult").innerHTML = "";
           document.querySelector("#stdResult").innerHTML = "";
           document.querySelector("#avgResult").innerHTML = "";
@@ -165,6 +168,8 @@
           if (compareScore(unsortScore)) {
             alert("分數請輸入於0~100之間");
           } else {
+            document.querySelector("#socreNum").innerHTML =
+              "分數數量：" + scores.length;
             // 高低差
             let gap = minMax(scores);
             document.querySelector("#highLowResult").innerHTML =
@@ -202,6 +207,8 @@
           ) {
             alert("面向分數需輸入於0-100且不得大於面向權重");
           } else {
+            document.querySelector("#socreNum").innerHTML =
+              "分數數量：" + scores.length;
             // 轉換百分制
             let percentScore = [];
             for (let i = 0; i < weight.length; i++) {
