@@ -100,24 +100,19 @@
       method.addEventListener("change", () => {
         if (method.value == 1) {
           weightClass.classList.add("hidden");
-          document.querySelector("#socreNum").innerHTML = "";
-          document.querySelector("#highLowResult").innerHTML = "";
-          document.querySelector("#stdResult").innerHTML = "";
-          document.querySelector("#avgResult").innerHTML = "";
-          document.querySelector("#weight").value = "";
-          document.querySelector("#score").value = "";
         } else {
           weightClass.classList.remove("hidden");
-          document.querySelector("#socreNum").innerHTML = "";
-          document.querySelector("#highLowResult").innerHTML = "";
-          document.querySelector("#stdResult").innerHTML = "";
-          document.querySelector("#avgResult").innerHTML = "";
-          document.querySelector("#weight").value = "";
-          document.querySelector("#score").value = "";
         }
+        document.querySelector("#socreNum").innerHTML = "";
+        document.querySelector("#highLowResult").innerHTML = "";
+        document.querySelector("#stdResult").innerHTML = "";
+        document.querySelector("#avgResult").innerHTML = "";
+        document.querySelector("#weight").value = "";
+        document.querySelector("#score").value = "";
       });
 
       excute.addEventListener("click", () => {
+        document.querySelector("#avgResult").innerHTML = "";
         let scores = document.querySelector("#score").value.trim();
         let weight = document.querySelector("#weight").value.trim();
         let unsortScore = scores
@@ -129,23 +124,38 @@
           .filter(Boolean)
           .map(Number)
           .sort();
-
         weight = weight
           .split(/[,\s\n]+/)
           .filter(Boolean)
           .map(Number);
-
-        function minMax(array) {
-          return array[array.length - 1] - array[0];
+        // 高低差
+        function minMax(arr) {
+          let gap = arr[arr.length - 1] - arr[0];
+          return (document.querySelector("#highLowResult").innerHTML =
+            "高低差為：" + Math.abs(gap.toFixed(2)));
         }
-
-        function std(array) {
-          let Avg = array.reduce((x, y) => x + y) / array.length;
-          let squaredDeviations = array.map((x) => (x - Avg) ** 2);
+        // 標準差
+        function std(arr) {
+          let Avg = arr.reduce((x, y) => x + y) / arr.length;
+          let squaredDeviations = arr.map((x) => (x - Avg) ** 2);
           let standardDeviation = Math.sqrt(
             squaredDeviations.reduce((x, y) => x + y) / squaredDeviations.length
           );
-          return standardDeviation;
+          return (document.querySelector("#stdResult").innerHTML =
+            "標準差為：" + standardDeviation.toFixed(2));
+        }
+        // 離均差
+        function avgd(arr) {
+          let avgResult = document.querySelector("#avgResult");
+          let avg = arr.reduce((x, y) => x + y) / arr.length;
+          for (let i = 0; i < arr.length; i++) {
+            let temp = arr[i] - avg;
+            let createD = document.createElement("div");
+            createD.innerHTML =
+              unsortScore[i] + " 的離均差為：" + Math.abs(temp.toFixed(2));
+            avgResult.appendChild(createD);
+          }
+          return;
         }
 
         function compareWeight(arr1, arr2) {
@@ -170,27 +180,9 @@
           } else {
             document.querySelector("#socreNum").innerHTML =
               "分數數量：" + scores.length;
-            // 高低差
-            let gap = minMax(scores);
-            document.querySelector("#highLowResult").innerHTML =
-              "高低差為：" + Math.abs(gap.toFixed(2));
-            // 標準差
-            let stdResult = std(scores);
-            document.querySelector("#stdResult").innerHTML =
-              "標準差為：" + stdResult.toFixed(2);
-            // 離均差
-            let avgResult = document.querySelector("#avgResult");
-            while (avgResult.firstChild) {
-              avgResult.removeChild(avgResult.firstChild);
-            }
-            for (let i = 0; i < scores.length; i++) {
-              let avg = scores.reduce((x, y) => x + y) / scores.length;
-              let temp = unsortScore[i] - avg;
-              let createD = document.createElement("div");
-              createD.innerHTML =
-                unsortScore[i] + " 的離均差為：" + Math.abs(temp.toFixed(2));
-              avgResult.appendChild(createD);
-            }
+            minMax(scores);
+            std(scores);
+            avgd(unsortScore);
           }
         }
         // 配分制
@@ -216,33 +208,9 @@
               percentScore.push(temp);
             }
             let percentScoreSort = percentScore.slice().sort();
-
-            // 高低差
-            let gap = minMax(percentScoreSort);
-            document.querySelector("#highLowResult").innerHTML =
-              "高低差為：" + Math.abs(gap.toFixed(2));
-
-            // 標準差
-            let stdResult = std(percentScoreSort);
-            document.querySelector("#stdResult").innerHTML =
-              "標準差為：" + stdResult.toFixed(2);
-
-            // 離均差
-            let avgResult = document.querySelector("#avgResult");
-            let avg =
-              percentScore.reduce((x, y) => x + y) / percentScore.length;
-
-            while (avgResult.firstChild) {
-              avgResult.removeChild(avgResult.firstChild);
-            }
-
-            for (let i = 0; i < percentScore.length; i++) {
-              let temp = percentScore[i] - avg;
-              let createD = document.createElement("div");
-              createD.innerHTML =
-                unsortScore[i] + " 的離均差為：" + Math.abs(temp.toFixed(2));
-              avgResult.appendChild(createD);
-            }
+            minMax(percentScoreSort);
+            std(percentScoreSort);
+            avgd(percentScore);
           }
         }
       });
