@@ -61,15 +61,14 @@
       </select>
     </div>
     <div class="weightInput hidden">
-      <span>請輸入面向占比</span>
+      <span>請輸入該面向占比</span>
       <textarea
         class="clear"
         name="weight"
         id="weight"
         cols="30"
         rows="5"
-        placeholder="可用空格、逗號或換行隔開數字
-(請依序輸入占比)"
+        placeholder="可用空格、逗號或換行隔開數字"
         autofocus
       ></textarea>
     </div>
@@ -167,7 +166,7 @@
 
         function compareWeight(arr1, arr2) {
           for (let i = 0; i < arr1.length; i++) {
-            if (arr1[i] > arr2[i]) {
+            if (arr1[i] > arr2[0]) {
               return true;
             }
           }
@@ -197,15 +196,7 @@
         // 配分制
         if (method.value === "2") {
           // 檢查分數
-          let weightSum = weight.reduce((x, y) => x + y);
-          if (weightSum !== 100) {
-            alert("面向總和須為100");
-          } else if (weight.length !== unsortScore.length) {
-            alert("面向數量與分數數量需相同");
-          } else if (
-            compareWeight(unsortScore, weight) ||
-            compareScore(unsortScore)
-          ) {
+          if (compareWeight(unsortScore, weight) || compareScore(unsortScore)) {
             alert("面向分數需輸入於0-100且不得大於面向權重");
           } else {
             document.querySelector("#socreNum").innerHTML =
@@ -213,8 +204,8 @@
 
             // 轉換百分制
             let percentScore = [];
-            for (let i = 0; i < weight.length; i++) {
-              let temp = (unsortScore[i] / weight[i]) * 100;
+            for (let i = 0; i < unsortScore.length; i++) {
+              let temp = (unsortScore[i] / weight[0]) * 100;
               percentScore.push(temp);
             }
             let percentScoreSort = percentScore.slice().sort();
