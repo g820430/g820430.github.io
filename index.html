@@ -87,6 +87,7 @@
       ></textarea>
     </div>
     <div id="socreNum"></div>
+    <div id="avgNum"></div>
     <div id="highLowResult"></div>
     <div id="stdResult"></div>
     <div id="avgResult"></div>
@@ -104,6 +105,7 @@
           weightClass.classList.remove("hidden");
         }
         document.querySelector("#socreNum").innerHTML = "";
+        document.querySelector("#avgNum").innerHTML = "";
         document.querySelector("#highLowResult").innerHTML = "";
         document.querySelector("#stdResult").innerHTML = "";
         document.querySelector("#avgResult").innerHTML = "";
@@ -128,6 +130,11 @@
           .split(/[,\s\n]+/)
           .filter(Boolean)
           .map(Number);
+
+        //平均數計算
+        function avgCount(arr) {
+          return arr.reduce((x, y) => x + y) / arr.length;
+        }
         // 高低差
         function minMax(arr) {
           let gap = arr[arr.length - 1] - arr[0];
@@ -136,7 +143,7 @@
         }
         // 標準差
         function std(arr) {
-          let Avg = arr.reduce((x, y) => x + y) / arr.length;
+          let Avg = avgCount(arr);
           let squaredDeviations = arr.map((x) => (x - Avg) ** 2);
           let standardDeviation = Math.sqrt(
             squaredDeviations.reduce((x, y) => x + y) / squaredDeviations.length
@@ -147,7 +154,7 @@
         // 離均差
         function avgd(arr) {
           let avgResult = document.querySelector("#avgResult");
-          let avg = arr.reduce((x, y) => x + y) / arr.length;
+          let avg = avgCount(arr);
           for (let i = 0; i < arr.length; i++) {
             let temp = arr[i] - avg;
             let createD = document.createElement("div");
@@ -174,19 +181,21 @@
         }
 
         // 百分制
-        if (method.value == 1) {
+        if (method.value === "1") {
           if (compareScore(unsortScore)) {
             alert("分數請輸入於0~100之間");
           } else {
             document.querySelector("#socreNum").innerHTML =
               "分數數量：" + scores.length;
+            document.querySelector("#avgNum").innerHTML =
+              "平均數為：" + avgCount(scores).toFixed(2);
             minMax(scores);
             std(scores);
             avgd(unsortScore);
           }
         }
         // 配分制
-        if (method.value == 2) {
+        if (method.value === "2") {
           // 檢查分數
           let weightSum = weight.reduce((x, y) => x + y);
           if (weightSum !== 100) {
@@ -201,6 +210,7 @@
           } else {
             document.querySelector("#socreNum").innerHTML =
               "分數數量：" + scores.length;
+
             // 轉換百分制
             let percentScore = [];
             for (let i = 0; i < weight.length; i++) {
